@@ -16,7 +16,7 @@ import java.util.List;
 public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 	private HashMap<String, String> tempWordsList;
 	private static List<ServerLanguage> dictionariesServersList;
-	private static int portSequenceNumber = 49153;
+	private static int portSequenceNumber = 49200;
 
 	public FileVisitor() {
 		tempWordsList = new HashMap<String, String>();
