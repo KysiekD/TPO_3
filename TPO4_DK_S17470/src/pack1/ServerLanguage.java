@@ -9,10 +9,10 @@ public class ServerLanguage {
 	private int port;
 	private HashMap<String, String> wordsHashMap;
 
-	public ServerLanguage(String language, int port) {
+	public ServerLanguage(String language, int port, HashMap<String, String> wordsList) {
 		this.port = port;
 		this.language = language;
-		this.wordsHashMap = new HashMap();
+		this.wordsHashMap = wordsList;
 	}
 
 	private void readDictionary() {

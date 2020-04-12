@@ -4,7 +4,6 @@ import java.nio.file.FileVisitResult;
 import static java.nio.file.FileVisitResult.*;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -15,47 +14,49 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
-	private List<String> dictionariesList;
-	private HashMap<String,String> tempWordsList;
+	private HashMap<String, String> tempWordsList;
+	private static List<ServerLanguage> dictionariesServersList;
+	private static int portSequenceNumber = 49153;
 
 	public FileVisitor() {
-		dictionariesList = new ArrayList<String>();
+		tempWordsList = new HashMap<String, String>();
+		dictionariesServersList = new ArrayList<ServerLanguage>();
 	}
 
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-		System.out.println(dir);
+		System.out.println("Checking directory for dictionaries: " + dir);
 		return CONTINUE;
 	}
 
 	public FileVisitResult visitFile(Path dir, BasicFileAttributes attrs) {
 		// System.out.println(dir); //test
-		String tempText = (String) dir.toString().subSequence(dir.toString().length() - 6, dir.toString().length() - 4);
+		String language = (String) dir.toString().subSequence(dir.toString().length() - 6, dir.toString().length() - 4);
 		// System.out.println(tempText); //test
-		dictionariesList.add(tempText);
-		this.addWordListToServerDictionary(dir.toString());
+
+		this.addWordListToServerDictionary(dir.toString(), tempWordsList);
+		dictionariesServersList.add(new ServerLanguage(language, portSequenceNumber, tempWordsList));
+		portSequenceNumber++;
 		return CONTINUE;
 	}
 
-	public void copyList(List<String> otherList) {
-		otherList.addAll(this.dictionariesList);
+	public void copyList(List<ServerLanguage> otherList) {
+		otherList.addAll(this.dictionariesServersList);
 	}
 
-	public void addWordListToServerDictionary(String path) {
-		try 
-		{
+	public void addWordListToServerDictionary(String path, HashMap<String, String> wordList) {
+		try {
 			BufferedReader reader = new BufferedReader(new FileReader(path));
 			String line = reader.readLine();
 
 			while (line != null) {
-				System.out.println(line); //test
+				// System.out.println(line); //test
 				line = reader.readLine();
+				wordList.put(line, "test");
 			}
 
 			reader.close();
 
-		} 
-		catch (IOException e) 
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

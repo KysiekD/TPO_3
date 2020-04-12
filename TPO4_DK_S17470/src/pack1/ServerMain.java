@@ -10,34 +10,24 @@ import java.util.Map;
 
 public class ServerMain {
 
-	// private HashMap<String, Integer> languageServersMap; //del
-	private List<String> languagesList;
 	private List<ServerLanguage> languageServersList;
-	private String pathToDictionaries;
+	private static String pathToDictionaries;
 
 	public ServerMain(String pathToDictionaries) {
-		this.pathToDictionaries = pathToDictionaries;
-		this.languagesList = new ArrayList<String>();
-		// this.languageServersMap = new HashMap(); //del
+		ServerMain.pathToDictionaries = pathToDictionaries;
 		this.languageServersList = new ArrayList<ServerLanguage>();
-		this.createLanguageServersMap(pathToDictionaries);
+		this.createLanguageServersMap(ServerMain.pathToDictionaries);
 	}
 
 	private void createLanguageServersMap(String path) {
 		FileVisitor visitor = new FileVisitor();
 		try {
 			Files.walkFileTree(Paths.get(path), visitor);
-			visitor.copyList(languagesList);
-			int portSequenceNumber = 49153;
+			visitor.copyList(languageServersList);
 
-			for (String language : languagesList) {
-				System.out.println("Language dictionary " + language + " detected."); // test
-				languageServersList.add(new ServerLanguage(language, portSequenceNumber));
-				portSequenceNumber++;
-			}
-
-			for (ServerLanguage G : languageServersList) {
-				System.out.println("Language server " + G.getLanguage() + " with port no " + G.getPort() + " created.");
+			for (ServerLanguage languageServers : languageServersList) {
+				System.out.println("Language dictionary " + languageServers.getLanguage() + " with port no "
+						+ languageServers.getPort() + " detected."); // test
 			}
 
 		} catch (IOException e) {
