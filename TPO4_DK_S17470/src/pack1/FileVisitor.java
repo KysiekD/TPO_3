@@ -34,7 +34,9 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 		// System.out.println(tempText); //test
 
 		this.addWordListToServerDictionary(dir.toString(), tempWordsList);
-		dictionariesServersList.add(new ServerLanguage(language, portSequenceNumber, tempWordsList));
+		dictionariesServersList.add(new ServerLanguage(language, portSequenceNumber, new HashMap<String,String>()));
+		dictionariesServersList.get(dictionariesServersList.size()-1).addWordsToDictionary(tempWordsList);
+		tempWordsList.clear();
 		portSequenceNumber++;
 		return CONTINUE;
 	}
@@ -46,12 +48,18 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 	public void addWordListToServerDictionary(String path, HashMap<String, String> wordList) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(path));
-			String line = reader.readLine();
+			String line = "";
+			String polishWord;
+			String translationWord;
+			
 
-			while (line != null) {
+			while ((line = reader.readLine()) != null) {
 				// System.out.println(line); //test
-				line = reader.readLine();
-				wordList.put(line, "test");
+				//line = reader.readLine();
+				//System.out.println(line); //test
+				//String [] tempTable = line.split("-", 2);
+				//wordList.put(tempTable[0], tempTable[1]);
+				wordList.put(line, "a");
 			}
 
 			reader.close();

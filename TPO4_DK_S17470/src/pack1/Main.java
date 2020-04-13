@@ -48,7 +48,9 @@ public class Main {
 		model.makeRequest("Pisze novum");
 		model.disconnect();
 		
+		
 		for(ServerMain serv : mainServersList) {
+			serv.viewInfoAboutDictionaries(); //test
 			serv.disconectMainServer();
 		}
 		

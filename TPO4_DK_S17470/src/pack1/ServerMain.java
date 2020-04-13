@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,20 @@ public class ServerMain extends Thread {
 		// .......................
 		// .......................
 
+	}
+	
+	public void viewInfoAboutDictionaries() { //test purpose
+		String text = "\nInfo about dictionary server: ";
+		
+		for (ServerLanguage sl : languageServersList) {
+		
+			
+			text = text.concat(sl.getLanguage() + "..." + sl.getPort());
+			text = text.concat(sl.readDictionary());
+			System.out.println(text);  //test
+			text = "Info about dictionary server: ";
+		}
+		
 	}
 
 }

@@ -15,8 +15,8 @@ public class ServerLanguage {
 		this.wordsHashMap = wordsList;
 	}
 
-	private void readDictionary() {
-
+	public String readDictionary() {
+		return "....Words in dictionary: " + wordsHashMap.toString();
 	}
 
 	public String getLanguage() {
@@ -26,4 +26,13 @@ public class ServerLanguage {
 	public int getPort() {
 		return this.port;
 	}
+	
+	public HashMap<String,String> getWords(){
+		return wordsHashMap;
+	}
+	
+	public void addWordsToDictionary(HashMap<String,String> map) {
+		wordsHashMap.putAll(map);
+	}
+	
 }
