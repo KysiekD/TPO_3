@@ -106,31 +106,44 @@ public class ServerMain extends Thread {
 	}
 
 	private void serviceRequests(Socket connection) {
-		try {
+
 			
 
 			
 			
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			out = new PrintWriter(connection.getOutputStream(), true);
-			System.out.println("Main server reads request from client..."); // test
-
-			System.out.println("Server received message: " + in.readLine());
-				System.out.print("Receiving...");
-			//}
-
-			System.out.println("Server received FULL message.");
+			System.out.println(readMessage(connection));
 			writeResp("Server to client: OK");
 			
 
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		
+		
 		}
 
 
+	
+
+private String readMessage(Socket conn) {
+	try {
+		in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		out = new PrintWriter(conn.getOutputStream(), true);
+		System.out.println("Main server reads request from client..."); // test
+		System.out.print("Receiving...");
+		System.out.println("Server received FULL message.");
+		return "Server received message: " + in.readLine();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return "Server main didn't receive any message from this client.";
+		
 	}
+	
+	
+	//}
+
+	
+}
 	
 	public void writeResp(String msg) {
 		System.out.println("Server writes confirmation...");
