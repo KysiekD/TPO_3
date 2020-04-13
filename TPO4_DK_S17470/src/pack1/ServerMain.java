@@ -1,6 +1,9 @@
 package pack1;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -14,9 +17,11 @@ public class ServerMain extends Thread {
 
 	private List<ServerLanguage> languageServersList;
 	private static String pathToDictionaries;
-	private volatile boolean serverRunning = true;
+	private static volatile boolean serverRunning = true;
 	private ServerSocket ss;
 	private String serverTID; // identyfikator watku
+	private BufferedReader in = null;
+	private PrintWriter out = null;
 
 	public ServerMain(String serverTID, ServerSocket ss, String pathToDictionaries) {
 		this.serverTID = serverTID;
@@ -27,6 +32,7 @@ public class ServerMain extends Thread {
 		ServerMain.pathToDictionaries = pathToDictionaries;
 		this.languageServersList = new ArrayList<ServerLanguage>();
 		this.createLanguageServersMap(ServerMain.pathToDictionaries);
+
 		start();
 	}
 
@@ -48,27 +54,52 @@ public class ServerMain extends Thread {
 	}
 
 	public void run() {
-		while(serverRunning) {
+		while (serverRunning) {
 			try {
 				Socket conn = ss.accept();
 				System.out.println("Connection established by " + serverTID);
 				serviceRequests(conn);
-			}catch (Exception e)
-			{
+				// ss.close(); //n
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		try {
-			ss.close();
-		} catch (Exception z) {
-			
-		}
+
 	}
-	
-	private void serviceRequests(Socket connection){
-		//.......................
-		//.......................
-		
+
+	public void disconectMainServer() {
+		try {
+			in.close();
+			out.close();
+			serverRunning = false;
+			System.out.println("Main server no. " + this.serverTID + " disconected.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void serviceRequests(Socket connection) {
+		try {
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			out = new PrintWriter(connection.getOutputStream(), true);
+			System.out.println("Main server reads request from client..."); // test
+			System.out.println("Request from client to server: " + in.readLine().toString());
+			for (String line; (line = in.readLine()) != null;) {
+				System.out.println("Server received: " + line);
+			}
+			in.close();
+			out.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// while()
+
+		// .......................
+		// .......................
+
 	}
 
 }

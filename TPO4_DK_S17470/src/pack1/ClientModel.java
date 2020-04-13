@@ -35,13 +35,13 @@ public class ClientModel {
 					new InputStreamReader(
 							socket.getInputStream()));
 			
-			out = new PrintWriter(
-					new OutputStreamWriter(
-							socket.getOutputStream()));
+			out = new PrintWriter(socket.getOutputStream(),true);
 			
 			
+			//this.makeRequest("Client star");
+			//this.disconnect();
 
-			System.out.println("Connected to host " + socket.getInetAddress());
+			System.out.println("Client connected to host " + socket.getInetAddress());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,11 +49,16 @@ public class ClientModel {
 	
 	}
 	
+	public void makeRequest(String msg) {
+		out.println(msg);
+	}
+	
 	public void disconnect() {
 		try {
 			in.close();
 			out.close();
 			socket.close();
+			System.out.println("Client disconnected.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
