@@ -23,6 +23,9 @@ public class ServerMain extends Thread {
 	private String serverTID; // identyfikator watku
 	private BufferedReader in = null;
 	private PrintWriter out = null;
+	private BufferedReader inCommunicationWithLanguageServer = null;
+	private PrintWriter outCommunicationWithLanguageServer = null;
+	private Socket socket;
 
 	public ServerMain(String serverTID, ServerSocket ss, String pathToDictionaries) {
 		this.serverTID = serverTID;
@@ -60,19 +63,41 @@ public class ServerMain extends Thread {
 				Socket conn = ss.accept();
 				System.out.println("Connection established by " + serverTID);
 				serviceRequests(conn);
-				// ss.close(); //n
+				requestToLanguageServer("localhost",49200); //!! z tym ze trzeba bedzie zmienic porty na argumenty
+				writeMessageToLanguageServer("Dawaj kota");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 	}
+	
+	public void requestToLanguageServer(String host, int port) { //..i dodac tez slowo i port klienta
+		try {
+			socket = new Socket(host, port);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+			out = new PrintWriter(socket.getOutputStream(), true);
+			System.out.println("Main server --" + serverTID + "-- connected to language server.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+	}
+	
+	public void writeMessageToLanguageServer(String msg) {
+		System.out.println("Server main writes message to language server.");
+		out.println(msg);
+	}
 
 	public void disconectMainServer() {
 		try {
+			
 			in.close();
 			out.close();
 			serverRunning = false;
+			ss.close();
 			System.out.println("Main server no. " + this.serverTID + " disconected.");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -82,28 +107,37 @@ public class ServerMain extends Thread {
 
 	private void serviceRequests(Socket connection) {
 		try {
+			
+
+			
+			
 			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			out = new PrintWriter(connection.getOutputStream(), true);
 			System.out.println("Main server reads request from client..."); // test
-			System.out.println("Request from client to server: " + in.readLine().toString());
-			for (String line; (line = in.readLine()) != null;) {
-				System.out.println("Server received: " + line);
-			}
-			in.close();
-			out.close();
+
+			System.out.println("Server received message: " + in.readLine());
+				System.out.print("Receiving...");
+			//}
+
+			System.out.println("Server received FULL message.");
+			writeResp("Server to client: OK");
+			
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// while()
 
-		// .......................
-		// .......................
 
 	}
 	
-	public void viewInfoAboutDictionaries() { //test purpose
+	public void writeResp(String msg) {
+		System.out.println("Server writes confirmation...");
+		out.println(msg);
+	}
+	
+	public void viewInfoAboutDictionariesAndDisconnect() { //test purpose
 		String text = "\nInfo about dictionary server: ";
 		
 		for (ServerLanguage sl : languageServersList) {
@@ -113,6 +147,7 @@ public class ServerMain extends Thread {
 			text = text.concat(sl.readDictionary());
 			System.out.println(text);  //test
 			text = "Info about dictionary server: ";
+			//sl.disconnect();
 		}
 		
 	}

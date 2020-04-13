@@ -45,13 +45,19 @@ public class Main {
 		
 		ClientModel model = new ClientModel(13);
 		model.connect("localhost", 49534);
-		model.makeRequest("Pisze novum");
-		model.disconnect();
+		model.makeRequest("DE-pies");
+		System.out.println(model.readMsgFromServer());
+		//model.disconnect();
+		
 		
 		
 		for(ServerMain serv : mainServersList) {
-			serv.viewInfoAboutDictionaries(); //test
-			serv.disconectMainServer();
+			serv.viewInfoAboutDictionariesAndDisconnect(); //test
+		}
+		
+		for(ServerMain n : mainServersList) {
+			//n.disconectMainServer();
+			
 		}
 		
 		

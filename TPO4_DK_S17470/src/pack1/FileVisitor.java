@@ -34,7 +34,7 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 		// System.out.println(tempText); //test
 
 		this.addWordListToServerDictionary(dir.toString(), tempWordsList);
-		dictionariesServersList.add(new ServerLanguage(language, portSequenceNumber, new HashMap<String,String>()));
+		dictionariesServersList.add(new ServerLanguage("localhost", language, portSequenceNumber, new HashMap<String,String>()));
 		dictionariesServersList.get(dictionariesServersList.size()-1).addWordsToDictionary(tempWordsList);
 		tempWordsList.clear();
 		portSequenceNumber++;
@@ -57,9 +57,10 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 				// System.out.println(line); //test
 				//line = reader.readLine();
 				//System.out.println(line); //test
-				//String [] tempTable = line.split("-", 2);
-				//wordList.put(tempTable[0], tempTable[1]);
-				wordList.put(line, "a");
+				String [] tempTable = line.split("-", 2);
+				wordList.put(tempTable[0], tempTable[1]);
+				//wordList.put(line, "a");
+				tempTable = null;
 			}
 
 			reader.close();
