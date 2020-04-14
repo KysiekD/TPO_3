@@ -18,7 +18,7 @@ public class ClientModel extends Thread{
 	private BufferedReader in;
 	private String host;
 	private PrintWriter out;
-	private Socket socket;
+	private Socket conn;
 	private Socket socketListeningForMessageFromLanguageServer;
 	private ServerSocket ss;
     private String messageFromServerTemp;
@@ -39,7 +39,7 @@ public class ClientModel extends Thread{
 			System.out.println("Client starts listening at port " + port);
 			start();
 			
-		
+		
 	} catch (IOException v) {
 		// TODO Auto-generated catch block
 		v.printStackTrace();
@@ -50,11 +50,11 @@ public class ClientModel extends Thread{
 	public void run() {
 		while(clientRunning) {
 			try {
-				Socket socketL = ss.accept();
-				System.out.println(readMsg(socketL));
-				readMsg(socketL);
+				conn = ss.accept();
+				//System.out.println(readMsg(socketL));
+				//readMsg(socketL);
 				
-				
+				serviceRequests(conn);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -65,14 +65,14 @@ public class ClientModel extends Thread{
 		
 	}
 	
-	public void connect(String host, int serverPort) {
+	public void connect(Socket socket) {
 		try {
-			socket = new Socket(host, serverPort);
+			//socket = new Socket(host, serverPort);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			out = new PrintWriter(socket.getOutputStream(), true);
 
-			System.out.println("Client connected to host " + socket.getInetAddress());
+			System.out.println("Client stream connected to smth.");
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -81,21 +81,27 @@ public class ClientModel extends Thread{
 
 	}
 	
+	public void serviceRequests(Socket connection) {
+		connect(connection);
+		readMsg(connection);
+		writeMsg("OK");
+	}
+	
 	
 	public String readMsg(Socket connection) {
-		System.out.println("Client established connection with language server.");
-		String text = "Client received nothing back";
+		//System.out.println("Client established connection with language server.");
+	
 		try {
-			text = in.readLine();
+			return "Client reads: " + in.readLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return text;
+		return "ERROR";
 	}
 	
 	public void writeMsg(String msg) {
-		
+		System.out.println("Client server writes: " + msg);
 		out.println(msg);
 		
 	}
@@ -126,7 +132,7 @@ public class ClientModel extends Thread{
 			
 			in.close();
 			out.close();
-			socket.close();
+			conn.close();
 			clientRunning = false;
 			System.out.println("Client disconnected.");
 		} catch (IOException e) {

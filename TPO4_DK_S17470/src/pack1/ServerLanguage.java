@@ -16,7 +16,7 @@ public class ServerLanguage extends Thread {
 	private int port;
 	private HashMap<String, String> wordsHashMap;
 	private static volatile boolean serverRunning = true;
-	private Socket socket;
+	private Socket conn;
 	private ServerSocket ss;
 	private BufferedReader in = null;
 	private PrintWriter out = null;
@@ -42,10 +42,10 @@ public class ServerLanguage extends Thread {
 	public void run() {
 		while (ServerLanguage.serverRunning) {
 			try {
-				Socket conn = ss.accept();
+				conn = ss.accept();
 
 				serviceRequests(conn);
-				System.out.println("REAL: " + readMsg(conn));
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -53,13 +53,13 @@ public class ServerLanguage extends Thread {
 		}
 	}
 
-	public void connect(String host, int port) {
+	public void connect(Socket socket) { // String host, int port
 		try {
-			socket = new Socket(host, port);
+			// socket = new Socket(host, port);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 
-			System.out.println("Language Server connected to client.");
+			System.out.println("Language Server stream connected to smth.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,35 +68,29 @@ public class ServerLanguage extends Thread {
 	}
 
 	public void serviceRequests(Socket connection) {
-		System.out.println("Language server " + this.getLanguage() + " established connection...");
-		connect("localhost", 13);
-		writeMsg("== Dictionary returns message to Client...===");
+		//System.out.println("Language server " + this.getLanguage() + " established connection...");
+		connect(connection); // "localhost", 13
+		System.out.println(readMsg(connection));
+		writeMsg("OK");
 	}
 
 	public void writeMsg(String msg) {
+		System.out.println("Language server writes: " + msg);
 		out.println(msg);
 	}
 
 	public String readMsg(Socket connection) {
 
 		try {
-			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			out = new PrintWriter(connection.getOutputStream(), true);
+			//in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			//out = new PrintWriter(connection.getOutputStream(), true);
+			return  "Language server reads: " + in.readLine();
+			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("Language server " + this.getLanguage() + " reads message from Main Server...");
-		String messageFromServerTemp;
-		try {
-			if ((messageFromServerTemp = in.readLine()) != null) {
-				return "Language server received message from main server: " + messageFromServerTemp;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "No message from Server main.";
+		return "ERROR";
 	}
 
 	public void disconnect() {

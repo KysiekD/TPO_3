@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -16,33 +17,35 @@ import java.util.Map;
 
 public class ServerMain extends Thread {
 
-	
-	
 	private ServerSocket ss;
-	private Socket socket;
+	private Socket conn;
 	private BufferedReader in = null;
 	private PrintWriter out = null;
-	private String host;
-	private int port;
-	
+	private InetSocketAddress isa;
+	//private String host;
+	//private int port;
+
 	private String serverTID; // identyfikator watku
 	private static volatile boolean serverRunning = true;
 	private static String pathToDictionaries;
 	private List<ServerLanguage> languageServersList;
 
-
-	public ServerMain(String serverTID, ServerSocket ss, String pathToDictionaries) {
+	public ServerMain(String serverTID, String host, int port, String pathToDictionaries) {
 		this.serverTID = serverTID;
-		this.ss = ss;
-		
-		
-		
-		System.out.println("Server " + serverTID + " started. Listening at port: " + ss.getLocalPort()
-				+ ", bind address: " + ss.getInetAddress());
+		try {
+			this.ss = new ServerSocket();
+			this.isa = new InetSocketAddress(host, port);
+			ss.bind(isa);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		ServerMain.pathToDictionaries = pathToDictionaries;
 		this.languageServersList = new ArrayList<ServerLanguage>();
 		this.createLanguageServersMap(ServerMain.pathToDictionaries);
+
+		System.out.println("Server " + serverTID + " started. Listening at port: " + ss.getLocalPort()
+				+ ", bind address: " + ss.getInetAddress());
 
 		start();
 	}
@@ -50,25 +53,24 @@ public class ServerMain extends Thread {
 	public void run() {
 		while (serverRunning) {
 			try {
-				Socket conn = ss.accept();
-				System.out.println("Connection established by " + serverTID);
-				connect("localhost", 49200); // !! z tym ze trzeba bedzie zmienic porty na argumenty
+				conn = ss.accept();
+				//connect("localhost", 49200); // 49200 !! z tym ze trzeba bedzie zmienic porty na argumenty
+				
+				//System.out.println("Connection established by server main no: " + serverTID);
 				serviceRequests(conn);
-				writeMsg("Dawaj kota");
+				//writeMsg("???");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
-	public void connect(String host, int port) { // ..i dodac tez slowo i port klienta
+	public void connect(Socket socket) { //  String host, int port ..i dodac tez slowo i port klienta
 		try {
-			socket = new Socket(host, port);
+			//socket = new Socket(host, port);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
 			out = new PrintWriter(socket.getOutputStream(), true);
-			System.out.println("Main server --" + serverTID + "-- connected to language server.");
+			System.out.println("Main server --" + serverTID + "-- stream connected to smth.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,29 +79,30 @@ public class ServerMain extends Thread {
 	}
 
 	private void serviceRequests(Socket connection) {
-
+		connect(connection);
 		System.out.println(readMsg(connection));
-		writeMsg("Server to client: OK");
+		writeMsg("OK");
 
 	}
 
 	public void writeMsg(String msg) {
-		System.out.println("Server writes...");
+		//System.out.println("Server writes...");
+		System.out.println("Main server writes: " + msg);
 		out.println(msg);
 	}
 
 	private String readMsg(Socket conn) {
 		try {
-			in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			out = new PrintWriter(conn.getOutputStream(), true);
-			System.out.println("Main server reads request from client..."); // test
-			System.out.print("Receiving...");
-			System.out.println("Server received FULL message.");
-			return "Server received message: " + in.readLine();
+			//in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			//out = new PrintWriter(conn.getOutputStream(), true);
+			//System.out.println("Main server reads request from client..."); // test
+			//System.out.print("Receiving...");
+			//System.out.println("Server received FULL message.");
+			return "Main server reads: " + in.readLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "Server main didn't receive any message from this client.";
+			return "ERROR.";
 
 		}
 

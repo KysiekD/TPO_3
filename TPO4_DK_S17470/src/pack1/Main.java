@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,37 +16,30 @@ public class Main {
 		// prywatne. Mo¿emy ich u¿ywac.
 		
 		final int SERVERS_NUM = 1; //liczba serverow
-		ServerSocket ss = null;
+
 		List<ServerMain> mainServersList = new ArrayList<ServerMain>();
 		
 		String tempServerDictionariesPath = "C:\\Users\\Wygrany\\Desktop\\Dictionaries";
 
-		
-		
-		
-		
-		
-		String host = "localhost";
-		int port = 49534;
-		InetSocketAddress isa = new InetSocketAddress(host,port);
-		try {
-			ss = new ServerSocket();
-			ss.bind(isa);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		
 		for(int i = 1; i <= SERVERS_NUM; i++) {
-			ServerMain mainServer = new ServerMain("Server thread " + i,ss, tempServerDictionariesPath);
+			ServerMain mainServer = new ServerMain("Server thread " + i, "localhost", 49534, tempServerDictionariesPath);
 			mainServersList.add(mainServer);
 			
 		}
 		
 		ClientModel model = new ClientModel(13, "localhost");
-		model.connect("localhost", 49534);
-		model.writeMsg("DE-pies");
+		Socket sock;
+		try {
+			sock = new Socket("localhost", 49534);
+			model.connect(sock);
+			model.writeMsg("DE-pies");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		//model.disconnect();
 		
