@@ -43,10 +43,10 @@ public class Main {
 			
 		}
 		
-		ClientModel model = new ClientModel(13);
+		ClientModel model = new ClientModel(13, "localhost");
 		model.connect("localhost", 49534);
-		model.makeRequest("DE-pies");
-		System.out.println(model.readMsgFromServer());
+		model.writeMsg("DE-pies");
+		
 		//model.disconnect();
 		
 		
