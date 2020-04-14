@@ -70,8 +70,20 @@ public class ServerLanguage extends Thread {
 	public void serviceRequests(Socket connection) {
 		//System.out.println("Language server " + this.getLanguage() + " established connection...");
 		connect(connection); // "localhost", 13
-		System.out.println(readMsg(connection));
+		String text = readMsg(connection);
+		System.out.println(text);
 		writeMsg("OK");
+		
+		Socket tempSocket;
+		try {
+			tempSocket = new Socket("localhost", 13);
+			connect(tempSocket);
+			writeMsg(text);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} //HARDCODED!
+
 	}
 
 	public void writeMsg(String msg) {

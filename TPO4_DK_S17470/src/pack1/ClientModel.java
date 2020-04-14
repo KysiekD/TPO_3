@@ -83,7 +83,8 @@ public class ClientModel extends Thread{
 	
 	public void serviceRequests(Socket connection) {
 		connect(connection);
-		readMsg(connection);
+		String text = readMsg(connection);
+		System.out.println(text);
 		writeMsg("OK");
 	}
 	

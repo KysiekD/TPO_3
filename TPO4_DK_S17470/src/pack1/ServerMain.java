@@ -80,8 +80,20 @@ public class ServerMain extends Thread {
 
 	private void serviceRequests(Socket connection) {
 		connect(connection);
-		System.out.println(readMsg(connection));
+		String text = readMsg(connection);
+		System.out.println(text);
 		writeMsg("OK");
+		
+		//handling / passing request:
+		try {
+			Socket tempSocket = new Socket("localhost", 49200); //HARDCODED!
+			connect(tempSocket);
+			writeMsg(text);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
