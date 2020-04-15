@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class ServerMain extends Thread {
@@ -73,17 +74,40 @@ public class ServerMain extends Thread {
 
 	}
 
+	public ServerLanguage getDictionary(String language) {
+		ListIterator<ServerLanguage> iterator = languageServersList.listIterator();
+		while (iterator.hasNext()) {
+			ServerLanguage dictionary = iterator.next();
+			// System.out.println(dictionary.getLanguage());
+			if (dictionary.getLanguage().equals(language)) {
+				System.out.println("=====" + dictionary.getLanguage() + "....." + dictionary.getPort()); // Test
+				return dictionary;
+
+			}
+		}
+		System.out.println("Error, language server not found on the list.");
+		return null;
+
+	}
+
 	private void serviceRequests(Socket connection) {
 		// Reads:
 		connect(connection);
 		String text = readMsg(connection);
+		String[] textTable = new String[4];
+		textTable = text.split("-");
+		// textTable[0] = language code
+		// textTable[1] = word
+		// textTable[2] = client port
+		// textTable[3] = client host
 		writeMsg("OK");
+		getDictionary(textTable[0].toString());
 		disconnect(connection);
 
 		// Writes:
 		try {
 
-			Socket tempSocket = new Socket("localhost", 49201); // HARDCODED!
+			Socket tempSocket = new Socket(textTable[3], Integer.parseInt(textTable[2])); // HARDCODED!
 			connect(tempSocket);
 			writeMsg(text);
 			disconnect(tempSocket);
@@ -105,6 +129,7 @@ public class ServerMain extends Thread {
 
 			String text = in.readLine();
 			System.out.println("Main server reads: " + text);
+
 			return text;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

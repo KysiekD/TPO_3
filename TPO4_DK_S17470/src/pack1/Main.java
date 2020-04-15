@@ -30,7 +30,7 @@ public class Main {
 		}
 		
 		ClientModel model = new ClientModel("localhost", 48999);
-		model.askForTranslation("DE", "Hung", "localhost", 49534);
+		model.askForTranslation("DE", "Hund", "localhost", 49534);
 		
 		/*
 		Socket sock;

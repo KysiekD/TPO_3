@@ -12,22 +12,22 @@ import java.net.Socket;
 
 public class ClientModel extends Thread {
 
-	//private String clientHost;
-	//private int listeningPort;
+	 private String clientHost; 
+	// private int listeningPort;
 	private Socket listeningSocket;
 
 	private ServerSocket ss;
 	private Boolean clientRunning = true;
 	private InetSocketAddress isa;
-	
+
 	private BufferedReader in;
 	private PrintWriter out;
 
 	public ClientModel(String host, int port) {
 		try {
-			//this.listeningPort = port;
-			//this.clientHost = host;
-			//this.listeningSocket = new Socket(host,port);
+			// this.listeningPort = port;
+			this.clientHost = host;
+			// this.listeningSocket = new Socket(host,port);
 
 			this.ss = new ServerSocket();
 			this.isa = new InetSocketAddress(host, port);
@@ -42,21 +42,18 @@ public class ClientModel extends Thread {
 		}
 
 	}
-	
+
 	public void askForTranslation(String language, String word, String serverHost, int serverPort) {
 		try {
 			Socket connection = new Socket(serverHost, serverPort);
 			connect(connection);
-			writeMsg("Goss");
-			
-			
+			writeMsg(language + "-" + word + "-" + this.isa.getPort() + "-" + this.clientHost);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
 
 	public void run() {
@@ -129,9 +126,7 @@ public class ClientModel extends Thread {
 	}
 
 	/*
-	public void setListeningPort(int number) {
-		this.listeningPort = number;
-	}
-	*/
+	 * public void setListeningPort(int number) { this.listeningPort = number; }
+	 */
 
 }
