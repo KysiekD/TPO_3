@@ -22,8 +22,6 @@ public class ServerMain extends Thread {
 	private BufferedReader in = null;
 	private PrintWriter out = null;
 	private InetSocketAddress isa;
-	//private String host;
-	//private int port;
 
 	private String serverTID; // identyfikator watku
 	private static volatile boolean serverRunning = true;
@@ -54,20 +52,17 @@ public class ServerMain extends Thread {
 		while (serverRunning) {
 			try {
 				conn = ss.accept();
-				//connect("localhost", 49200); // 49200 !! z tym ze trzeba bedzie zmienic porty na argumenty
-				
-				//System.out.println("Connection established by server main no: " + serverTID);
+
 				serviceRequests(conn);
-				//writeMsg("???");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void connect(Socket socket) { //  String host, int port ..i dodac tez slowo i port klienta
+	public void connect(Socket socket) { // String host, int port ..i dodac tez slowo i port klienta
 		try {
-			//socket = new Socket(host, port);
+
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 			System.out.println("Main server --" + serverTID + "-- stream connected to smth.");
@@ -79,43 +74,37 @@ public class ServerMain extends Thread {
 	}
 
 	private void serviceRequests(Socket connection) {
-		//Reads:
+		// Reads:
 		connect(connection);
 		String text = readMsg(connection);
 		writeMsg("OK");
-		//disconnect(connection);
-		
-		//Writes:
+		disconnect(connection);
+
+		// Writes:
 		try {
-			
-			Socket tempSocket = new Socket("localhost", 49201); //HARDCODED!
+
+			Socket tempSocket = new Socket("localhost", 49201); // HARDCODED!
 			connect(tempSocket);
 			writeMsg(text);
-			//disconnect(tempSocket);
+			disconnect(tempSocket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-
-		
+		}
 
 	}
 
 	public void writeMsg(String msg) {
-		//System.out.println("Server writes...");
+
 		System.out.println("Main server writes: " + msg);
 		out.println(msg);
 	}
 
 	private String readMsg(Socket conn) {
 		try {
-			//in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			//out = new PrintWriter(conn.getOutputStream(), true);
-			//System.out.println("Main server reads request from client..."); // test
-			//System.out.print("Receiving...");
-			//System.out.println("Server received FULL message.");
+
 			String text = in.readLine();
-			System.out.println( "Main server reads: " + text);
+			System.out.println("Main server reads: " + text);
 			return text;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -132,9 +121,7 @@ public class ServerMain extends Thread {
 			in.close();
 			out.close();
 			socket.close();
-			//serverRunning = false;
-			//ss.close();
-			//System.out.println("Main server no. " + this.serverTID + " disconected.");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -167,7 +154,7 @@ public class ServerMain extends Thread {
 			text = text.concat(sl.readDictionary());
 			System.out.println(text); // test
 			text = "Info about dictionary server: ";
-			// sl.disconnect();
+
 		}
 
 	}

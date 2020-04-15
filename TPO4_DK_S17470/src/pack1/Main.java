@@ -29,7 +29,10 @@ public class Main {
 			
 		}
 		
-		ClientModel model = new ClientModel(48001, "localhost");
+		ClientModel model = new ClientModel("localhost", 48999);
+		model.askForTranslation("DE", "Hung", "localhost", 49534);
+		
+		/*
 		Socket sock;
 		try {
 			sock = new Socket("localhost", 49534);
@@ -39,6 +42,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 		
 		//model.disconnect();
