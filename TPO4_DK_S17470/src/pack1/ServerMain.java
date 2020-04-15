@@ -57,6 +57,7 @@ public class ServerMain extends Thread {
 				conn = ss.accept();
 
 				serviceRequests(conn);
+				conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

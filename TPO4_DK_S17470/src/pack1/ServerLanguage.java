@@ -46,10 +46,11 @@ public class ServerLanguage extends Thread {
 				conn = ss.accept();
 
 				serviceRequests(conn);
-
+				conn.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 
 		}
 	}

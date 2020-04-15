@@ -11,8 +11,8 @@ public class ClientController
 		JFrame mainFrame = new JFrame();
 		mainFrame.add(view);
 		mainFrame.setVisible(true);
-		//mainFrame.pack();
-		mainFrame.setSize(500, 300);
+		mainFrame.pack();
+		mainFrame.setSize(300, 150);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

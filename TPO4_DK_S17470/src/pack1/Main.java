@@ -29,9 +29,14 @@ public class Main {
 			
 		}
 		
-		ClientModel model = new ClientModel("localhost", 48999);
-		model.askForTranslation("EN", "kot", "localhost", 49534);
 		
+		
+		ClientModel model = new ClientModel("localhost", 48999);
+		ClientViewMain mainView = new ClientViewMain();
+		ClientController controller = new ClientController(model, mainView);
+		
+		model.askForTranslation("EN", "kot", "localhost", 49534);
+		model.askForTranslation("EN", "ptak", "localhost", 49534);
 		/*
 		Socket sock;
 		try {
@@ -59,8 +64,7 @@ public class Main {
 		}
 		
 		
-		//ClientViewMain mainView = new ClientViewMain();
-		//ClientController controller = new ClientController(model, mainView);
+		
 
 	}
 

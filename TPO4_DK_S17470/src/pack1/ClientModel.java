@@ -62,6 +62,7 @@ public class ClientModel extends Thread {
 				listeningSocket = ss.accept();
 
 				serviceRequests(listeningSocket);
+				listeningSocket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
