@@ -23,13 +23,14 @@ public class ServerMain extends Thread {
 	private BufferedReader in = null;
 	private PrintWriter out = null;
 	private InetSocketAddress isa;
+	private String languageServersHost;
 
 	private String serverTID; // identyfikator watku
 	private static volatile boolean serverRunning = true;
 	private static String pathToDictionaries;
 	private List<ServerLanguage> languageServersList;
 
-	public ServerMain(String serverTID, String host, int port, String pathToDictionaries) {
+	public ServerMain(String serverTID, String host, int port, String pathToDictionaries, String languageServersHost) {
 		this.serverTID = serverTID;
 		try {
 			this.ss = new ServerSocket();
@@ -40,6 +41,7 @@ public class ServerMain extends Thread {
 		}
 
 		ServerMain.pathToDictionaries = pathToDictionaries;
+		this.languageServersHost = languageServersHost;
 		this.languageServersList = new ArrayList<ServerLanguage>();
 		this.createLanguageServersMap(ServerMain.pathToDictionaries);
 
@@ -80,7 +82,7 @@ public class ServerMain extends Thread {
 			ServerLanguage dictionary = iterator.next();
 			// System.out.println(dictionary.getLanguage());
 			if (dictionary.getLanguage().equals(language)) {
-				System.out.println("=====" + dictionary.getLanguage() + "....." + dictionary.getPort()); // Test
+				//System.out.println("=====" + dictionary.getLanguage() + "....." + dictionary.getPort()); // Test
 				return dictionary;
 
 			}
@@ -91,7 +93,7 @@ public class ServerMain extends Thread {
 	}
 
 	private void serviceRequests(Socket connection) {
-		// Reads:
+		// Reads from client:
 		connect(connection);
 		String text = readMsg(connection);
 		String[] textTable = new String[4];
@@ -101,15 +103,16 @@ public class ServerMain extends Thread {
 		// textTable[2] = client port
 		// textTable[3] = client host
 		writeMsg("OK");
-		getDictionary(textTable[0].toString());
+		
 		disconnect(connection);
 
-		// Writes:
+		// Writes to language server:
 		try {
 
-			Socket tempSocket = new Socket(textTable[3], Integer.parseInt(textTable[2])); // HARDCODED!
+			Socket tempSocket = new Socket(getDictionary(textTable[0]).getHost(), getDictionary(textTable[0]).getPort()); // HARDCODED!
+			System.out.println("FOUND DICTIONARY HOST: " + getDictionary(textTable[0]).getHost() + ", FOUND PORT: " + getDictionary(textTable[0]).getPort());
 			connect(tempSocket);
-			writeMsg(text);
+			writeMsg(textTable[1] + "-" + textTable[2] + "-" + textTable[3] );
 			disconnect(tempSocket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -154,7 +157,7 @@ public class ServerMain extends Thread {
 	}
 
 	private void createLanguageServersMap(String path) {
-		FileVisitor visitor = new FileVisitor();
+		FileVisitor visitor = new FileVisitor(languageServersHost);
 		try {
 			Files.walkFileTree(Paths.get(path), visitor);
 			visitor.copyList(languageServersList);

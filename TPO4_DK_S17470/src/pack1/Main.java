@@ -24,13 +24,13 @@ public class Main {
 
 		
 		for(int i = 1; i <= SERVERS_NUM; i++) {
-			ServerMain mainServer = new ServerMain("Server thread " + i, "localhost", 49534, tempServerDictionariesPath);
+			ServerMain mainServer = new ServerMain("Server thread " + i, "localhost", 49534, tempServerDictionariesPath, "localhost");
 			mainServersList.add(mainServer);
 			
 		}
 		
 		ClientModel model = new ClientModel("localhost", 48999);
-		model.askForTranslation("DE", "Hund", "localhost", 49534);
+		model.askForTranslation("EN", "kot", "localhost", 49534);
 		
 		/*
 		Socket sock;

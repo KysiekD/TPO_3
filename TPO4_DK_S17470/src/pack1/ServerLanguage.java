@@ -13,6 +13,7 @@ public class ServerLanguage extends Thread {
 
 	private String language;
 	private int port;
+	private String host;
 	private HashMap<String, String> wordsHashMap;
 	private static volatile boolean serverRunning = true;
 	private Socket conn;
@@ -23,6 +24,7 @@ public class ServerLanguage extends Thread {
 
 	public ServerLanguage(String host, String language, int port, HashMap<String, String> wordsList) {
 		this.port = port;
+		this.host = host;
 		this.language = language;
 		this.wordsHashMap = wordsList;
 		try {
@@ -66,19 +68,24 @@ public class ServerLanguage extends Thread {
 	}
 
 	public void serviceRequests(Socket connection) {
-		// Reads:
+		// Reads from main server:
 		connect(connection); // "localhost", 13
 		String text = readMsg(connection);
 		System.out.println(text);
+		String[] textTable = new String[3];
+		textTable = text.split("-");
+		// textTable[0] = word
+		// textTable[1] = client port
+		// textTable[2] = client host
 		writeMsg("OK");
 		disconnect(connection);
-
-		// Writes:
+		
+		// Writes back to client:
 		try {
 			Socket tempSocket;
-			tempSocket = new Socket("localhost", 48999); // HARDCODED!!! powinien byc port klienta
+			tempSocket = new Socket(textTable[2], Integer.parseInt(textTable[1])); // HARDCODED!!! powinien byc port klienta
 			connect(tempSocket);
-			writeMsg(text);
+			writeMsg(translateWord(textTable[0]));
 			disconnect(tempSocket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -86,6 +93,13 @@ public class ServerLanguage extends Thread {
 		}
 
 	}
+	
+	public String translateWord(String word) {
+		String translation = wordsHashMap.get(word);
+		System.out.println("FOUND TRANSLATION: " + translation);
+		return translation;
+	}
+	
 
 	public void writeMsg(String msg) {
 		System.out.println("Language server writes: " + msg);
@@ -129,6 +143,10 @@ public class ServerLanguage extends Thread {
 
 	public int getPort() {
 		return this.port;
+	}
+	
+	public String getHost() {
+		return this.host;
 	}
 
 	public HashMap<String, String> getWords() {

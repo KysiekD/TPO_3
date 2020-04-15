@@ -17,8 +17,10 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 	private HashMap<String, String> tempWordsList;
 	private static List<ServerLanguage> dictionariesServersList;
 	private static int portSequenceNumber = 49200;
+	private static String languageServerHost;
 
-	public FileVisitor() {
+	public FileVisitor(String languageServerHost) {
+		this.languageServerHost = languageServerHost;
 		tempWordsList = new HashMap<String, String>();
 		dictionariesServersList = new ArrayList<ServerLanguage>();
 	}
@@ -34,7 +36,7 @@ public class FileVisitor<E, K> extends SimpleFileVisitor<Path> {
 		// System.out.println(tempText); //test
 
 		this.addWordListToServerDictionary(dir.toString(), tempWordsList);
-		dictionariesServersList.add(new ServerLanguage("localhost", language, portSequenceNumber, new HashMap<String,String>()));
+		dictionariesServersList.add(new ServerLanguage(FileVisitor.languageServerHost, language, portSequenceNumber, new HashMap<String,String>()));
 		dictionariesServersList.get(dictionariesServersList.size()-1).addWordsToDictionary(tempWordsList);
 		tempWordsList.clear();
 		portSequenceNumber++;
