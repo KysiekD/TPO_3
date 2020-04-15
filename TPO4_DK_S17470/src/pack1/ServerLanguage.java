@@ -68,21 +68,23 @@ public class ServerLanguage extends Thread {
 	}
 
 	public void serviceRequests(Socket connection) {
-		//System.out.println("Language server " + this.getLanguage() + " established connection...");
+		//Reads:
 		connect(connection); // "localhost", 13
 		String text = readMsg(connection);
 		System.out.println(text);
 		writeMsg("OK");
 		
-		Socket tempSocket;
+		//Writes:
 		try {
-			tempSocket = new Socket("localhost", 13);
+			Socket tempSocket;
+			tempSocket = new Socket("localhost", 48001); //HARDCODED!!!
 			connect(tempSocket);
 			writeMsg(text);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} //HARDCODED!
+		} 
+
 
 	}
 
@@ -96,7 +98,9 @@ public class ServerLanguage extends Thread {
 		try {
 			//in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			//out = new PrintWriter(connection.getOutputStream(), true);
-			return  "Language server reads: " + in.readLine();
+			String text = in.readLine();
+			System.out.println( "Language server reads: " + text);
+			return text;
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

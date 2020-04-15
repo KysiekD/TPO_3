@@ -79,20 +79,24 @@ public class ServerMain extends Thread {
 	}
 
 	private void serviceRequests(Socket connection) {
+		//Reads:
 		connect(connection);
 		String text = readMsg(connection);
-		System.out.println(text);
 		writeMsg("OK");
+		//disconnect(connection);
 		
-		//handling / passing request:
+		//Writes:
 		try {
-			Socket tempSocket = new Socket("localhost", 49200); //HARDCODED!
+			
+			Socket tempSocket = new Socket("localhost", 49201); //HARDCODED!
 			connect(tempSocket);
 			writeMsg(text);
+			//disconnect(tempSocket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
+
 		
 
 	}
@@ -110,7 +114,9 @@ public class ServerMain extends Thread {
 			//System.out.println("Main server reads request from client..."); // test
 			//System.out.print("Receiving...");
 			//System.out.println("Server received FULL message.");
-			return "Main server reads: " + in.readLine();
+			String text = in.readLine();
+			System.out.println( "Main server reads: " + text);
+			return text;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,14 +126,15 @@ public class ServerMain extends Thread {
 
 	}
 
-	public void disconnect() {
+	public void disconnect(Socket socket) {
 		try {
 
 			in.close();
 			out.close();
-			serverRunning = false;
-			ss.close();
-			System.out.println("Main server no. " + this.serverTID + " disconected.");
+			socket.close();
+			//serverRunning = false;
+			//ss.close();
+			//System.out.println("Main server no. " + this.serverTID + " disconected.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -29,12 +29,12 @@ public class Main {
 			
 		}
 		
-		ClientModel model = new ClientModel(13, "localhost");
+		ClientModel model = new ClientModel(48001, "localhost");
 		Socket sock;
 		try {
 			sock = new Socket("localhost", 49534);
 			model.connect(sock);
-			model.writeMsg("DE-pies");
+			model.writeMsg("DE-pies-48001");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
