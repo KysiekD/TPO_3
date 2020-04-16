@@ -25,6 +25,8 @@ public class ClientModel extends Thread {
 	
 	private String serverHost;
 	private int serverPort;
+	
+	private String translation = "";
 
 	public ClientModel(String host, int port, String serverHost, int serverPort) {
 		try {
@@ -59,6 +61,10 @@ public class ClientModel extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public String getTranslation() {
+		return translation;
 	}
 
 	public void run() {
@@ -95,6 +101,7 @@ public class ClientModel extends Thread {
 	public void serviceRequests(Socket connection) {
 		connect(connection);
 		String text = readMsg(connection);
+		
 		System.out.println(text);
 		writeMsg("OK");
 		disconnect(connection);
@@ -103,7 +110,8 @@ public class ClientModel extends Thread {
 	public String readMsg(Socket connection) {
 
 		try {
-			return "Client reads: " + in.readLine();
+			translation = in.readLine();
+			return "Client reads: " + translation;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
