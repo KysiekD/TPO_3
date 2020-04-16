@@ -8,6 +8,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -15,44 +21,35 @@ public class Main {
 		// Pozosta³y zakres numerów portów 49152-65535 okreœla tzw. porty dynamiczne lub
 		// prywatne. Mo¿emy ich u¿ywac.
 		
+		
 		final int SERVERS_NUM = 1; //liczba serverow
 
 		List<ServerMain> mainServersList = new ArrayList<ServerMain>();
 		
 		String tempServerDictionariesPath = "C:\\Users\\Wygrany\\Desktop\\Dictionaries";
-
+		final String serverHost = "localhost";
+		final int serverPort = 49534;
+		final String languageServerhost = "localhost";
 
 		
 		for(int i = 1; i <= SERVERS_NUM; i++) {
-			ServerMain mainServer = new ServerMain("Server thread " + i, "localhost", 49534, tempServerDictionariesPath, "localhost");
+			ServerMain mainServer = new ServerMain("Server thread " + i, serverHost, serverPort, tempServerDictionariesPath, languageServerhost);
 			mainServersList.add(mainServer);
 			
 		}
 		
+		ClientModel model = new ClientModel("localhost", 48999, serverHost, serverPort);
+		ClientViewMain mainView = new ClientViewMain(model);
+		//ClientController controller = new ClientController(model, mainView);
+		
+		//model.askForTranslation("EN", "kot", "localhost", 49534);
+		//model.askForTranslation("EN", "ptak", "localhost", 49534);
+		
+
 		
 		
-		ClientModel model = new ClientModel("localhost", 48999);
-		ClientViewMain mainView = new ClientViewMain();
-		ClientController controller = new ClientController(model, mainView);
 		
-		model.askForTranslation("EN", "kot", "localhost", 49534);
-		model.askForTranslation("EN", "ptak", "localhost", 49534);
-		/*
-		Socket sock;
-		try {
-			sock = new Socket("localhost", 49534);
-			model.connect(sock);
-			model.writeMsg("DE-pies-48001");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		
-		
-		//model.disconnect();
-		
-		
+
 		
 		for(ServerMain serv : mainServersList) {
 			serv.viewInfoAboutDictionariesAndDisconnect(); //test
@@ -62,6 +59,9 @@ public class Main {
 			//n.disconectMainServer();
 			
 		}
+		
+		
+
 		
 		
 		

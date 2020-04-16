@@ -9,13 +9,19 @@ import javax.swing.JTextField;
 
 public class ClientViewMain extends JPanel
 {
-	private JLabel mainLabel, langageLabel, wordLabel;
+	private JLabel mainLabel, langageLabel, wordLabel, mainLabel2;
 	private JTextField languageTextField, wordTextField;
-	private JPanel panel;
-	private JButton buttonCheck;
+	private JPanel panel, panel2;
+	private ButtonCheck buttonCheck;
+	private JFrame mainFrame;
+	private ClientModel model;
 
-	public ClientViewMain() 
+
+	public ClientViewMain(ClientModel model) 
 	{
+		//??
+		this.model = model;
+		this.mainFrame = new JFrame();
 
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -25,18 +31,27 @@ public class ClientViewMain extends JPanel
 		languageTextField = new JTextField();
 		wordLabel = new JLabel("Please write Polish word to translate:");
 		wordTextField = new JTextField();
-		buttonCheck = new JButton("Search");
-		
+		buttonCheck = new ButtonCheck("Search", model, mainFrame, languageTextField, wordTextField);
+		buttonCheck.addActionListener(buttonCheck);
 		
 		panel.add(mainLabel);
 		panel.add(languageTextField);
 		panel.add(wordTextField);
 		panel.add(buttonCheck);
-		this.add(panel);
+		mainFrame.add(panel);
 		
 		
+		
+		mainFrame.setVisible(true);
+		mainFrame.pack();
+		mainFrame.setSize(300, 150);
+		mainFrame.setLocationRelativeTo(null);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
+		
+		panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		mainLabel2 = new JLabel("Translation");
 	}
 	
 

@@ -22,11 +22,16 @@ public class ClientModel extends Thread {
 
 	private BufferedReader in;
 	private PrintWriter out;
+	
+	private String serverHost;
+	private int serverPort;
 
-	public ClientModel(String host, int port) {
+	public ClientModel(String host, int port, String serverHost, int serverPort) {
 		try {
 			// this.listeningPort = port;
 			this.clientHost = host;
+			this.serverHost = serverHost;
+			this.serverPort = serverPort;
 			// this.listeningSocket = new Socket(host,port);
 
 			this.ss = new ServerSocket();
