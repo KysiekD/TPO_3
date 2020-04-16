@@ -191,5 +191,20 @@ public class ServerMain extends Thread {
 		}
 
 	}
+	
+	public String getLanguagesList() {
+		String text = "";
+		for (ServerLanguage sl : languageServersList) {
+
+			text = text.concat(sl.getLanguage() + " ");
+			//text = text.concat(sl.readDictionary());
+			//System.out.println(text); // test
+			//text = "Info about dictionary server: ";
+
+		}
+		
+		return text;
+
+	}
 
 }

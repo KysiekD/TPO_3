@@ -17,7 +17,7 @@ public class ClientViewMain extends JPanel
 	private ClientModel model;
 
 
-	public ClientViewMain(ClientModel model) 
+	public ClientViewMain(ClientModel model, String languages) 
 	{
 		//??
 		this.model = model;
@@ -26,7 +26,7 @@ public class ClientViewMain extends JPanel
 		//Panel before translation:
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		mainLabel = new JLabel("Dictionary: EN, DE");
+		mainLabel = new JLabel("Dictionary: " + languages);
 		
 		langageLabel = new JLabel("Please write language code. For example: EN.");
 		languageTextField = new JTextField();

@@ -30,6 +30,8 @@ public class Main {
 		final String serverHost = "localhost";
 		final int serverPort = 49534;
 		final String languageServerhost = "localhost";
+		
+		String languages = "";
 
 		
 		for(int i = 1; i <= SERVERS_NUM; i++) {
@@ -38,8 +40,12 @@ public class Main {
 			
 		}
 		
+		for(ServerMain a : mainServersList) {
+			languages = languages.concat(a.getLanguagesList());
+		}
+		
 		ClientModel model = new ClientModel("localhost", 48999, serverHost, serverPort);
-		ClientViewMain mainView = new ClientViewMain(model);
+		ClientViewMain mainView = new ClientViewMain(model,languages);
 		//ClientController controller = new ClientController(model, mainView);
 		
 		//model.askForTranslation("EN", "kot", "localhost", 49534);

@@ -45,7 +45,7 @@ class ButtonCheck extends JButton implements ActionListener {
 			e1.printStackTrace();
 		}
 		String translation = model.getTranslation();
-		this.panel.add(new JLabel("Translation for word " + word.getText() + " to " + language.getText() + "is: " + translation));
+		this.panel.add(new JLabel("Translation for word '" + word.getText() + "' to '" + language.getText() + "' is: " + translation));
 		translationLabel = new JLabel(translation);
 		mainFrame.setSize(300, 210);
 		mainFrame.pack();

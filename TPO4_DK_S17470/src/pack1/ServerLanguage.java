@@ -96,7 +96,12 @@ public class ServerLanguage extends Thread {
 	}
 	
 	public String translateWord(String word) {
-		String translation = wordsHashMap.get(word);
+		//String translation = wordsHashMap.get(word);
+		String translation;
+		if(wordsHashMap.containsKey(word)){
+			translation = wordsHashMap.get(word);
+		}
+		else translation = "Word '" + word + "' not found in dictionary.";
 		System.out.println("FOUND TRANSLATION: " + translation);
 		return translation;
 	}
