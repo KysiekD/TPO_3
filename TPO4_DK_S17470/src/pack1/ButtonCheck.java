@@ -39,15 +39,16 @@ class ButtonCheck extends JButton implements ActionListener {
 		// model.askForTranslation("EN", "kot", "localhost", 49534);
 		model.askForTranslation(language.getText(), word.getText(), "localhost", 49534);
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		String translation = model.getTranslation();
-		this.panel.add(new JLabel("Translation: " + translation));
+		this.panel.add(new JLabel("Translation for word " + word.getText() + " to " + language.getText() + "is: " + translation));
 		translationLabel = new JLabel(translation);
 		mainFrame.setSize(300, 210);
+		mainFrame.pack();
 		panel.repaint();
 		mainFrame.repaint();
 		

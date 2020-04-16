@@ -54,8 +54,9 @@ public class ClientViewMain extends JPanel
 		
 		
 		mainFrame.setVisible(true);
-		mainFrame.pack();
+		
 		mainFrame.setSize(300, 200);
+		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

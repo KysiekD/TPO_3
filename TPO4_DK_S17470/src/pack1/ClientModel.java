@@ -55,8 +55,10 @@ public class ClientModel extends Thread {
 			Socket connection = new Socket(serverHost, serverPort);
 			connect(connection);
 			writeMsg(language + "-" + word + "-" + this.isa.getPort() + "-" + this.clientHost);
-
-		} catch (IOException e) {
+			Thread.sleep(1000);
+			readMsg(connection);
+			readMsg(connection);
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -114,9 +116,9 @@ public class ClientModel extends Thread {
 			return "Client reads: " + translation;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
-		return "ERROR";
+		return "Client reads: no message";
 	}
 
 	public void writeMsg(String msg) {

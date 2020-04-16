@@ -77,7 +77,7 @@ public class ServerMain extends Thread {
 
 	}
 
-	public ServerLanguage getDictionary(String language) {
+	public ServerLanguage getDictionary(String language) throws Exception {
 		ListIterator<ServerLanguage> iterator = languageServersList.listIterator();
 		while (iterator.hasNext()) {
 			ServerLanguage dictionary = iterator.next();
@@ -89,7 +89,7 @@ public class ServerMain extends Thread {
 			}
 		}
 		System.out.println("Error, language server not found on the list.");
-		return null;
+		throw new Exception();
 
 	}
 
@@ -105,19 +105,23 @@ public class ServerMain extends Thread {
 		// textTable[3] = client host
 		writeMsg("OK");
 		
-		disconnect(connection);
+		
 
 		// Writes to language server:
 		try {
-
-			Socket tempSocket = new Socket(getDictionary(textTable[0]).getHost(), getDictionary(textTable[0]).getPort()); // HARDCODED!
+			
+			Socket tempSocket = new Socket(getDictionary(textTable[0]).getHost(), getDictionary(textTable[0]).getPort());
 			System.out.println("FOUND DICTIONARY HOST: " + getDictionary(textTable[0]).getHost() + ", FOUND PORT: " + getDictionary(textTable[0]).getPort());
 			connect(tempSocket);
 			writeMsg(textTable[1] + "-" + textTable[2] + "-" + textTable[3] );
 			disconnect(tempSocket);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			writeMsg("No dictionary found for this language code.");
+			//e.printStackTrace();
+			
+		}finally {
+			//disconnect(connection);
 		}
 
 	}
